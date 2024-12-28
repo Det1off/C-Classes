@@ -8,65 +8,65 @@ namespace ConsoleApp5
 {
     public class Group
     {
-        private List<Student> Students;
-        private string GroupName;
-        private string Specialization;
-        private int CourseNumber;
+        private List<Student> _students;
+        private string _groupName;
+        private string _specialization;
+        private int _courseNumber;
 
         public Group()
         {
-            Students = new List<Student>();
+            _students = new List<Student>();
         }
 
-        public void Set_Students(List<Student> students)
+        public void SetStudents(List<Student> students)
         {
-            Students = students;
+            _students = students;
         }
 
-        public List<Student> Get_Students()
+        public List<Student> GetStudents()
         {
-            return Students;
+            return _students;
         }
 
-        public void Set_GroupName(string groupName)
+        public void SetGroupName(string groupName)
         {
-            GroupName = groupName;
+            _groupName = groupName;
         }
 
-        public string Get_GroupName()
+        public string GetGroupName()
         {
-            return GroupName;
+            return _groupName;
         }
 
-        public void Set_Specialization(string specialization)
+        public void SetSpecialization(string specialization)
         {
-            Specialization = specialization;
+            _specialization = specialization;
         }
 
-        public string Get_Specialization()
+        public string GetSpecialization()
         {
-            return Specialization;
+            return _specialization;
         }
 
-        public void Set_CourseNumber(int courseNumber)
+        public void SetCourseNumber(int courseNumber)
         {
-            CourseNumber = courseNumber;
+            _courseNumber = courseNumber;
         }
 
-        public int Get_CourseNumber()
+        public int GetCourseNumber()
         {
-            return CourseNumber;
+            return _courseNumber;
         }
 
         public void AddStudent(Student student)
         {
-            Students.Add(student);
+            _students.Add(student);
         }
 
         public void ShowAllStudents()
         {
-            Console.WriteLine($"Group: {GroupName}, Specialization: {Specialization}, Course: {CourseNumber}");
-            foreach (var student in Students)
+            Console.WriteLine($"Group: {_groupName}, Specialization: {_specialization}, Course: {_courseNumber}");
+            foreach (var student in _students)
             {
                 Console.WriteLine(student.ToString());
             }
@@ -74,7 +74,7 @@ namespace ConsoleApp5
 
         public void TransferStudent(Group targetGroup, Student student)
         {
-            if (Students.Remove(student))
+            if (_students.Remove(student))
             {
                 targetGroup.AddStudent(student);
             }
@@ -82,14 +82,35 @@ namespace ConsoleApp5
 
         public void ExpelLowestScoringStudent()
         {
-            if (Students.Count > 0)
+            if (_students.Count > 0)
             {
-                var lowestScoringStudent = Students.OrderBy(s => s.Get_TestScores().Average()).FirstOrDefault();
+                var lowestScoringStudent = _students.OrderBy(s => s.GetTestScores().Average()).FirstOrDefault();
                 if (lowestScoringStudent != null)
                 {
-                    Students.Remove(lowestScoringStudent);
+                    _students.Remove(lowestScoringStudent);
                 }
             }
         }
+
+        public static bool operator >(Group g1, Group g2) => g1._students.Count > g2._students.Count;
+        public static bool operator <(Group g1, Group g2) => g1._students.Count < g2._students.Count;
+        public static bool operator ==(Group g1, Group g2) => g1._students.Count == g2._students.Count;
+        public static bool operator !=(Group g1, Group g2) => !(g1 == g2);
+        public static implicit operator bool(Group g) => g._students.Count > 0;
+
+        public Student this[int index] => (index >= 0 && index < _students.Count) ? _students[index] : null;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Group other)
+            {
+                return _groupName == other._groupName &&
+                       _specialization == other._specialization;
+            }
+            return false;
+        }
+
+        public override int GetHashCode() => (_groupName, _specialization).GetHashCode();
     }
 }
+

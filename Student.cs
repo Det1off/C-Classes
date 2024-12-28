@@ -9,134 +9,150 @@ namespace ConsoleApp5
 {
     public class Student
     {
-        private string Surname;
-        private string FirstName;
-        private string LastName;
-        private string Birthday;
-        private string Address;
-        private string PhoneNumber;
+        private string _surname;
+        private string _firstName;
+        private string _lastName;
+        private DateTime _birthday;
+        private string _address;
+        private string _phoneNumber;
 
-        private List<int> TestScores;
-        private List<int> CourseworkScores;
-        private List<int> ExamScores;
+        private List<int> _testScores;
+        private List<int> _courseworkScores;
+        private List<int> _examScores;
 
         public Student() { }
 
-        public Student (string surname, string firstName, string lastName)
+        public Student(string surname, string firstName, string lastName)
         {
-            Surname = surname;
-            FirstName = firstName;
-            LastName = lastName;
+            _surname = surname;
+            _firstName = firstName;
+            _lastName = lastName;
         }
 
         public void ShowAllData()
         {
             Console.WriteLine(ToString());
-            Console.WriteLine(Convert.ToString(Get_TestScores()));
-            Console.WriteLine(Convert.ToString(Get_CourseworkScores()));
-            Console.WriteLine(Convert.ToString(Get_ExamScores()));
+            Console.WriteLine(Convert.ToString(GetTestScores()));
+            Console.WriteLine(Convert.ToString(GetCourseworkScores()));
+            Console.WriteLine(Convert.ToString(GetExamScores()));
         }
 
         public override string ToString()
         {
-            return $"{LastName} {FirstName} {Surname}, DOB: {Birthday}, Address: {Address}, Phone: {PhoneNumber}";
+            return $"{_lastName} {_firstName} {_surname}, DOB: {_birthday}, Address: {_address}, Phone: {_phoneNumber}";
         }
 
         public void Set_ExamScores(List<int> examScores)
         {
-            ExamScores = examScores;
+            _examScores = examScores;
         }
 
-        public List<int> Get_ExamScores()
+        public List<int> GetExamScores()
         {
-            return ExamScores;
+            return _examScores;
         }
 
-        public void Set_CourseworkScores(List<int> courseworkScores)
+        public void SetCourseworkScores(List<int> courseworkScores)
         {
-            CourseworkScores = courseworkScores;
+            _courseworkScores = courseworkScores;
         }
 
-        public List<int> Get_CourseworkScores()
+        public List<int> GetCourseworkScores()
         {
-            return CourseworkScores;
+            return _courseworkScores;
         }
 
-        public void Set_TestScores (List<int> testScores)
+        public void SetTestScores(List<int> testScores)
         {
-            TestScores = testScores;
+            _testScores = testScores;
         }
 
-        public List<int> Get_TestScores ()
+        public List<int> GetTestScores()
         {
-            return TestScores;
+            return _testScores;
         }
 
-        public void Set_Surname(string surname)
+        public void SetSurname(string surname)
         {
-            Surname = surname;
+            _surname = surname;
         }
 
-        public string Get_Surname()
+        public string GetSurname()
         {
-            return Surname;
+            return _surname;
         }
 
-        public void Set_FirstName(string firstName)
+        public void SetFirstName(string firstName)
         {
-            FirstName = firstName;
+            _firstName = firstName;
         }
 
-        public string Get_FirstName()
+        public string GetFirstName()
         {
-            return FirstName;
+            return _firstName;
         }
 
-        public void Set_LastName(string lastName)
+        public void SetLastName(string lastName)
         {
-            LastName = lastName;
+            _lastName = lastName;
         }
 
-        public string Get_LastName ()
+        public string GetLastName()
         {
-            return LastName;
+            return _lastName;
         }
 
-        public void Set_Birthday(string birthday)
+        public void SetBirthday(DateTime birthday)
         {
-            Birthday = birthday;
+            _birthday = birthday;
         }
 
-        public string GetDataTime()
+        public DateTime GetDataTime()
         {
-            return Birthday;
+            return _birthday;
         }
 
-        public void Set_Address(string address)
+        public void SetAddress(string address)
         {
-            Address = address;
+            _address = address;
         }
 
-        public string Get_Address()
+        public string GetAddress()
         {
-            return Address;
+            return _address;
         }
 
-        public void Set_PhoneNumber(string phoneNumber)
+        public void SetPhoneNumber(string phoneNumber)
         {
-            PhoneNumber = phoneNumber;
+            _phoneNumber = phoneNumber;
         }
 
-        public string Get_PhoneNumber ()
+        public string GetPhoneNumber()
         {
-            return PhoneNumber;
+            return _phoneNumber;
         }
 
+        public double AverageScore => (_testScores?.Concat(_courseworkScores ?? new List<int>())
+                                       .Concat(_examScores ?? new List<int>())
+                                       .Average()) ?? 0;
 
+        public static bool operator >(Student s1, Student s2) => s1.AverageScore > s2.AverageScore;
+        public static bool operator <(Student s1, Student s2) => s1.AverageScore < s2.AverageScore;
+        public static bool operator ==(Student s1, Student s2) => s1.AverageScore == s2.AverageScore;
+        public static bool operator !=(Student s1, Student s2) => !(s1 == s2);
+        public static implicit operator bool(Student s) => s.AverageScore >= 7;
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Student other)
+            {
+                return _surname == other._surname &&
+                       _firstName == other._firstName &&
+                       _lastName == other._lastName;
+            }
+            return false;
+        }
 
-
-
-
+        public override int GetHashCode() => (_surname, _firstName, _lastName).GetHashCode();
     }
 }
