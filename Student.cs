@@ -9,8 +9,24 @@ namespace ConsoleApp5
 {
     public class Student
     {
-        private string _surname;
+        private string _surname {  get; set; }
         private string _firstName;
+
+        public string FirstName {
+            get { return _firstName; }
+            set 
+            {
+                if (_firstName == "Adolf")
+                {
+                    Console.WriteLine("Error");
+                }
+                else 
+                { 
+                    _firstName = value;
+                }
+            }
+        }
+
         private string _lastName;
         private DateTime _birthday;
         private string _address;

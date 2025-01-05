@@ -3,13 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ConsoleApp5
 {
     public class Group
     {
-        private List<Student> _students;
+        private List<Student> _students { get; set; }
         private string _groupName;
+        public string groupName
+        {
+            get { return _groupName; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    _groupName = value;
+                }
+            }
+        }
+
         private string _specialization;
         private int _courseNumber;
 
