@@ -1,139 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 public class Student
 {
-    private string _surname { get; set; }
-    private string _firstName;
-    private string _lastName;
-    private DateTime _birthday;
-    private string _address;
-    private string _phoneNumber;
+    // Свойства
+    public string Surname { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime Birthday { get; set; }
+    public string Address { get; set; }
+    public string PhoneNumber { get; set; }
 
-    private List<int> _testScores;
-    private List<int> _courseworkScores;
-    private List<int> _examScores;
+    public List<int> TestScores { get; set; } = new List<int>();
+    public List<int> CourseworkScores { get; set; } = new List<int>();
+    public List<int> ExamScores { get; set; } = new List<int>();
 
+    // Конструкторы
     public Student() { }
 
     public Student(string surname, string firstName, string lastName)
     {
-        _surname = surname;
-        _firstName = firstName;
-        _lastName = lastName;
+        Surname = surname;
+        FirstName = firstName;
+        LastName = lastName;
     }
 
+    // Методы
     public void ShowAllData()
     {
         Console.WriteLine(ToString());
-        Console.WriteLine(Convert.ToString(GetTestScores()));
-        Console.WriteLine(Convert.ToString(GetCourseworkScores()));
-        Console.WriteLine(Convert.ToString(GetExamScores()));
+        Console.WriteLine(string.Join(", ", TestScores));
+        Console.WriteLine(string.Join(", ", CourseworkScores));
+        Console.WriteLine(string.Join(", ", ExamScores));
     }
 
     public override string ToString()
     {
-        return $"{_lastName} {_firstName} {_surname}, DOB: {_birthday}, Address: {_address}, Phone: {_phoneNumber}";
+        return $"{LastName} {FirstName} {Surname}, DOB: {Birthday:yyyy-MM-dd}, Address: {Address}, Phone: {PhoneNumber}";
     }
 
-    public void SetExamScores(List<int> examScores)
-    {
-        _examScores = examScores;
-    }
+    // Средний балл
+    public double AverageScore => TestScores.Concat(CourseworkScores).Concat(ExamScores).DefaultIfEmpty(0).Average();
 
-    public List<int> GetExamScores()
-    {
-        return _examScores;
-    }
-
-    public void SetCourseworkScores(List<int> courseworkScores)
-    {
-        _courseworkScores = courseworkScores;
-    }
-
-    public List<int> GetCourseworkScores()
-    {
-        return _courseworkScores;
-    }
-
-    public void SetTestScores(List<int> testScores)
-    {
-        _testScores = testScores;
-    }
-
-    public List<int> GetTestScores()
-    {
-        return _testScores;
-    }
-
-    public void SetSurname(string surname)
-    {
-        _surname = surname;
-    }
-
-    public string GetSurname()
-    {
-        return _surname;
-    }
-
-    public void SetFirstName(string firstName)
-    {
-        _firstName = firstName;
-    }
-
-    public string GetFirstName()
-    {
-        return _firstName;
-    }
-
-    public void SetLastName(string lastName)
-    {
-        _lastName = lastName;
-    }
-
-    public string GetLastName()
-    {
-        return _lastName;
-    }
-
-    public void SetBirthday(DateTime birthday)
-    {
-        _birthday = birthday;
-    }
-
-    public DateTime GetBirthday()
-    {
-        return _birthday;
-    }
-
-    public void SetAddress(string address)
-    {
-        _address = address;
-    }
-
-    public string GetAddress()
-    {
-        return _address;
-    }
-
-    public void SetPhoneNumber(string phoneNumber)
-    {
-        _phoneNumber = phoneNumber;
-    }
-
-    public string GetPhoneNumber()
-    {
-        return _phoneNumber;
-    }
-
-    public double AverageScore => (_testScores?.Concat(_courseworkScores ?? new List<int>())
-                                   .Concat(_examScores ?? new List<int>())
-                                   .Average()) ?? 0;
-
+    // Операторы сравнения
     public static bool operator >(Student s1, Student s2) => s1.AverageScore > s2.AverageScore;
     public static bool operator <(Student s1, Student s2) => s1.AverageScore < s2.AverageScore;
     public static bool operator ==(Student s1, Student s2) => s1.AverageScore == s2.AverageScore;
@@ -144,14 +54,14 @@ public class Student
     {
         if (obj is Student other)
         {
-            return _surname == other._surname &&
-                   _firstName == other._firstName &&
-                   _lastName == other._lastName;
+            return Surname == other.Surname &&
+                   FirstName == other.FirstName &&
+                   LastName == other.LastName;
         }
         return false;
     }
 
-    public override int GetHashCode() => (_surname, _firstName, _lastName).GetHashCode();
+    public override int GetHashCode() => (Surname, FirstName, LastName).GetHashCode();
 
     // Вложенные классы для сортировки
     public class SortByAverageScore : IComparer<Student>
@@ -166,7 +76,7 @@ public class Student
     {
         public int Compare(Student x, Student y)
         {
-            return $"{x._lastName} {x._firstName} {x._surname}".CompareTo($"{y._lastName} {y._firstName} {y._surname}");
+            return $"{x.LastName} {x.FirstName} {x.Surname}".CompareTo($"{y.LastName} {y.FirstName} {y.Surname}");
         }
     }
 }

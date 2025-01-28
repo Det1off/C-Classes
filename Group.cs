@@ -1,92 +1,49 @@
-﻿using ConsoleApp5;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 public class Group : IEnumerable<Student>
 {
-    private List<Student> _students { get; set; }
-    private string _groupName;
-    public string GroupName
+    // Свойства
+    public List<Student> Students { get; private set; } = new List<Student>();
+    public string GroupName { get; set; }
+    public string Specialization { get; set; }
+    public int CourseNumber { get; set; }
+
+    // Конструкторы
+    public Group() { }
+
+    public Group(string groupName, string specialization, int courseNumber)
     {
-        get { return _groupName; }
-        set
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                _groupName = value;
-            }
-        }
+        GroupName = groupName;
+        Specialization = specialization;
+        CourseNumber = courseNumber;
     }
 
-    private string _specialization;
-    private int _courseNumber;
-
-    public Group()
-    {
-        _students = new List<Student>();
-    }
-
-    public void SetStudents(List<Student> students)
-    {
-        _students = students;
-    }
-
-    public List<Student> GetStudents()
-    {
-        return _students;
-    }
-
-    public void SetGroupName(string groupName)
-    {
-        _groupName = groupName;
-    }
-
-    public string GetGroupName()
-    {
-        return _groupName;
-    }
-
-    public void SetSpecialization(string specialization)
-    {
-        _specialization = specialization;
-    }
-
-    public string GetSpecialization()
-    {
-        return _specialization;
-    }
-
-    public void SetCourseNumber(int courseNumber)
-    {
-        _courseNumber = courseNumber;
-    }
-
-    public int GetCourseNumber()
-    {
-        return _courseNumber;
-    }
-
+    // Методы
     public void AddStudent(Student student)
     {
-        _students.Add(student);
+        Students.Add(student);
+    }
+
+    public void RemoveStudent(Student student)
+    {
+        Students.Remove(student);
     }
 
     public void ShowAllStudents()
     {
-        Console.WriteLine($"Group: {_groupName}, Specialization: {_specialization}, Course: {_courseNumber}");
-        foreach (var student in _students)
+        Console.WriteLine($"Group: {GroupName}, Specialization: {Specialization}, Course: {CourseNumber}");
+        foreach (var student in Students)
         {
-            Console.WriteLine(student.ToString());
+            Console.WriteLine(student);
         }
     }
 
     public void TransferStudent(Group targetGroup, Student student)
     {
-        if (_students.Remove(student))
+        if (Students.Remove(student))
         {
             targetGroup.AddStudent(student);
         }
@@ -94,43 +51,40 @@ public class Group : IEnumerable<Student>
 
     public void ExpelLowestScoringStudent()
     {
-        if (_students.Count > 0)
+        if (Students.Any())
         {
-            var lowestScoringStudent = _students.OrderBy(s => s.AverageScore).FirstOrDefault();
+            var lowestScoringStudent = Students.OrderBy(s => s.AverageScore).FirstOrDefault();
             if (lowestScoringStudent != null)
             {
-                _students.Remove(lowestScoringStudent);
+                Students.Remove(lowestScoringStudent);
             }
         }
     }
 
-    public static bool operator >(Group g1, Group g2) => g1._students.Count > g2._students.Count;
-    public static bool operator <(Group g1, Group g2) => g1._students.Count < g2._students.Count;
-    public static bool operator ==(Group g1, Group g2) => g1._students.Count == g2._students.Count;
-    public static bool operator !=(Group g1, Group g2) => !(g1 == g2);
-    public static implicit operator bool(Group g) => g._students.Count > 0;
+    // Индексатор
+    public Student this[int index] => (index >= 0 && index < Students.Count) ? Students[index] : null;
 
-    public Student this[int index] => (index >= 0 && index < _students.Count) ? _students[index] : null;
+    // Операторы сравнения
+    public static bool operator >(Group g1, Group g2) => g1.Students.Count > g2.Students.Count;
+    public static bool operator <(Group g1, Group g2) => g1.Students.Count < g2.Students.Count;
+    public static bool operator ==(Group g1, Group g2) => g1.Students.Count == g2.Students.Count;
+    public static bool operator !=(Group g1, Group g2) => !(g1 == g2);
+    public static implicit operator bool(Group g) => g.Students.Count > 0;
 
     public override bool Equals(object obj)
     {
         if (obj is Group other)
         {
-            return _groupName == other._groupName &&
-                   _specialization == other._specialization;
+            return GroupName == other.GroupName &&
+                   Specialization == other.Specialization;
         }
         return false;
     }
 
-    public override int GetHashCode() => (_groupName, _specialization).GetHashCode();
+    public override int GetHashCode() => (GroupName, Specialization).GetHashCode();
 
-    public IEnumerator<Student> GetEnumerator()
-    {
-        return _students.GetEnumerator();
-    }
+    // Реализация IEnumerable<Student>
+    public IEnumerator<Student> GetEnumerator() => Students.GetEnumerator();
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
